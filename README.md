@@ -1,0 +1,2 @@
+# bing_wallpaper
+一个用于获取bing每日图片的服务端小工具
