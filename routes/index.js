@@ -27,33 +27,26 @@ let getImgStory = () => {
 /// Router
 ////////////////////////////////////////////////////////
 router.get('/', (req, res, next) => {
-
-	// 并发获取
+    // 并发获取
     axios
     .all([getImgUrl(), getImgStory()])
     .then(
-    	axios.spread((imgUrl, imgStroy) => {
-    		// console.log('imgUrl',imgUrl)
-    		// console.log('imgStroy',imgStroy)
-    		let url = 'http://s.cn.bing.net' + imgUrl.data.images[0].url
-    		let copyright = imgUrl.data.images[0].copyright
-    		let description = imgStroy.data.para1
-    		let title = imgStroy.data.title
-    		let date = imgUrl.data.images[0].enddate
-
-    		res.json({
-		    	url: url,
-		    	copyright: copyright,
-		    	description: description,
-		    	title: title,
-		    	date: date,
-		    	location: {
-		    		longitude: imgStroy.data.Longitude,
-		    		latitude: imgStroy.data.Latitude
-		    	}
-		    })
-    	})
+        axios.spread((imgUrl, imgStroy) => {
+            // 返回信息
+            res.json({
+                url: 'http://s.cn.bing.net' + imgUrl.data.images[0].url,
+                copyright: imgUrl.data.images[0].copyright,
+                description: imgStroy.data.para1,
+                title: imgStroy.data.title,
+                date: imgUrl.data.images[0].enddate,
+                location: {
+                    longitude: imgStroy.data.Longitude,
+                    latitude: imgStroy.data.Latitude
+                }
+            })
+        })
     )
+
 })
 
 module.exports = router
