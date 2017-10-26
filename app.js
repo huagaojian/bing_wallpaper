@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 // router
 const index = require('./routes/index')
+// events
+const downloadImages = require('./events/download_images')
 
 let app = express()
 
@@ -21,8 +23,22 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+// 允许跨域
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With")
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS")
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8")
+    next()
+})
+
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
+// event
+downloadImages()
+
+// router
 app.use('/', index)
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
