@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 // router
 const index = require('./routes/index')
 // events
-const downloadImages = require('./events/download_images')
+const DownloadImages = require('./events/download_images')
 
 let app = express()
 
@@ -27,20 +27,41 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With")
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS")
-    res.header("X-Powered-By",' 3.2.1')
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
+    res.header("X-Powered-By", '3.2.1')
     res.header("Content-Type", "application/json;charset=utf-8")
     next()
 })
 
 //////////////////////////////////////////////////////////////////
+/// FUNCTIONS
+let loopEveryDayAt12 = (timer, fn) => {
+	// 循环函数
+	let loopFunction = ()=>{
+		let date = new Date()
+		let hours = date.getHours()
+		let minites = date.getMinutes()
+		if (hours == 12) {
+			console.log('>>>>>>>>>>> loop at '+ hours + ':' + minites)
+			fn()
+		}
+	}
+	// 先执行一次
+	loopFunction()
+	// 定时执行
+	timer = setInterval(loopFunction, 3600000)
+}
+
+
 //////////////////////////////////////////////////////////////////
 // event
-downloadImages()
+// 循环下载定时，每天12点执行
+let downloadTimer
+loopEveryDayAt12(downloadTimer, DownloadImages)
 
-// router
-app.use('/', index)
 //////////////////////////////////////////////////////////////////
+/// router
+app.use('/', index)
 //////////////////////////////////////////////////////////////////
 
 // catch 404 and forward to error handler
