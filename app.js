@@ -47,7 +47,7 @@ let loopEveryDayAt12 = (timer, fn) => {
 		}
 	}
 	// 先执行一次
-	loopFunction()
+    fn() 
 	// 定时执行
 	timer = setInterval(loopFunction, 3600000)
 }
@@ -58,6 +58,7 @@ let loopEveryDayAt12 = (timer, fn) => {
 // 循环下载定时，每天12点执行
 let downloadTimer
 loopEveryDayAt12(downloadTimer, DownloadImages)
+console.log('start loop downloading');
 
 //////////////////////////////////////////////////////////////////
 /// router
