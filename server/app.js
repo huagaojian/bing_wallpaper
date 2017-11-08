@@ -5,7 +5,8 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 // router
-const index = require('./routes/index')
+const GetWallpaper = require('./routes/get_wallpaper')
+const CreateThumb = require('./routes/create_thumb')
 // events
 const DownloadImages = require('./events/download_images')
 
@@ -21,10 +22,12 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+
+// 静态文件目录，访问项目首页
+app.use(express.static(path.join(__dirname, '../static')))
 
 // 允许跨域
-app.all('*', function(req, res, next) {
+app.all('*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With")
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
@@ -36,20 +39,20 @@ app.all('*', function(req, res, next) {
 //////////////////////////////////////////////////////////////////
 /// FUNCTIONS
 let loopEveryDayAt12 = (timer, fn) => {
-	// 循环函数
-	let loopFunction = ()=>{
-		let date = new Date()
-		let hours = date.getHours()
-		let minites = date.getMinutes()
-		if (hours == 12) {
-			console.log('>>>>>>>>>>> loop at '+ hours + ':' + minites)
-			fn()
-		}
-	}
-	// 先执行一次
-    fn() 
-	// 定时执行
-	timer = setInterval(loopFunction, 3600000)
+    // 循环函数
+    let loopFunction = () => {
+        let date = new Date()
+        let hours = date.getHours()
+        let minites = date.getMinutes()
+        if (hours == 12) {
+            console.log('>>>>>>>>>>> loop at ' + hours + ':' + minites)
+            fn()
+        }
+    }
+    // 先执行一次
+    fn()
+    // 定时执行
+    timer = setInterval(loopFunction, 3600000)
 }
 
 
@@ -62,18 +65,19 @@ console.log('start loop downloading');
 
 //////////////////////////////////////////////////////////////////
 /// router
-app.use('/', index)
+app.use('/get_wallpaper', GetWallpaper)
+app.use('/b', CreateThumb)
 //////////////////////////////////////////////////////////////////
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found')
+app.use((req, res, next) => {
+    let err = new Error('Not Found')
     err.status = 404
     next(err)
 })
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     // set locals, only providing error in development
     res.locals.message = err.message
     res.locals.error = req.app.get('env') === 'development' ? err : {}

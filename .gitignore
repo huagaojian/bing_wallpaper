@@ -43,8 +43,5 @@ yarn-error.log*
 
 #=========================================================
 # ignore deleted files
-**/delete/
-ignore_data/
-note/
-psd/
 bing_images/
+server/node_modules/
