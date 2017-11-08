@@ -26,15 +26,11 @@ let fsExistsSync = (path) => {
  * @param  {[type]} dir [description]
  * @return {[type]}     [description]
  */
-let createThumbs = (res, dir)=>{
+let createThumbs = (dir)=>{
     // console.log('CurrentDir', dir)
     fs.readdir(dir, (err,filenames) => {
         if (err) {
             console.log(err)
-            res.json({
-                success: false,
-                msg: err
-            })
         }
         // 遍历文件
         for (let i = 0; i < filenames.length; i++) {
@@ -57,10 +53,6 @@ let createThumbs = (res, dir)=>{
                 }
             }
         }
-
-        res.json({
-            success: true
-        })
     })
 }
 
@@ -77,6 +69,7 @@ router.get('/', (req, res, next) => {
                 success: false,
                 msg: err
             })
+            return
         }
         // 获取目录
         let folders = []
@@ -90,8 +83,12 @@ router.get('/', (req, res, next) => {
         for (let i = 0; i < folders.length; i++) {
             let imgDir = path.join(IMGDIR, folders[i])
             // console.log('imgDir',imgDir)
-            createThumbs(res,imgDir)
+            createThumbs(imgDir)
         }
+
+        res.json({
+            success:true
+        })
     })
 })
 

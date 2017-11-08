@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 // router
 const GetWallpaper = require('./routes/get_wallpaper')
 const CreateThumb = require('./routes/create_thumb')
+const GetImageList = require('./routes/get_image_list')
 // events
 const DownloadImages = require('./events/download_images')
 
@@ -24,7 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 // 静态文件目录，访问项目首页
-app.use(express.static(path.join(__dirname, '../static')))
+app.use('/bing', express.static(path.join(__dirname, '../bing_images/')))
+app.use(express.static(path.join(__dirname, '../web/dist/')))
 
 // 允许跨域
 app.all('*', (req, res, next) => {
@@ -66,7 +68,8 @@ console.log('start loop downloading');
 //////////////////////////////////////////////////////////////////
 /// router
 app.use('/get_wallpaper', GetWallpaper)
-app.use('/b', CreateThumb)
+app.use('/create_thumb', CreateThumb)
+app.use('/get_img_list', GetImageList)
 //////////////////////////////////////////////////////////////////
 
 // catch 404 and forward to error handler
