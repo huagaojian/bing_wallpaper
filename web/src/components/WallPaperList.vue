@@ -1,5 +1,9 @@
 <template>
     <div>
+        <h1>
+            {{filenameList[0].split('/')[0]}}
+        </h1>
+        <br>
         <ul>
             <li v-for="(v,i) in filenameList">
                 <a :href="imgFolder + '/' + v + '.jpg'" target="blank">
@@ -75,9 +79,9 @@ export default {
                 }
             }
 
-            console.log('wallpaper', this.wallpaperList)
-            console.log('thumb', this.thumbList)
-            console.log('filenames', this.filenameList)
+            // console.log('wallpaper', this.wallpaperList)
+            // console.log('thumb', this.thumbList)
+            // console.log('filenames', this.filenameList)
         }
     },
     created() {

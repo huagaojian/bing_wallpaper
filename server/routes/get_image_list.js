@@ -14,6 +14,7 @@ let findSync = (startPath) => {
 
     let finder = (path) => {
         let files = fs.readdirSync(path)
+
         files.forEach((val, index) => {
             let fPath = join(path, val)
             let stats = fs.statSync(fPath)
@@ -30,12 +31,23 @@ let findSync = (startPath) => {
 /// Router
 ////////////////////////////////////////////////////////
 router.get('/', (req, res, next) => {
-	let result = findSync(path.join(__dirname, '../../bing_images/'))
 
-	res.json({
-		success: true,
-		data: result
-	})
+    // 获取年月
+    let date = new Date
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    month = (month < 10 ? "0" + month : month)
+    let ym = (year.toString() + month.toString())
+    let searchFolder = path.join(__dirname, '../../bing_images/') + ym
+    console.log(searchFolder)
+
+    let result = findSync(searchFolder)
+
+    res.json({
+        success: true,
+        data: result,
+        month: ym
+    })
 })
 
 module.exports = router
